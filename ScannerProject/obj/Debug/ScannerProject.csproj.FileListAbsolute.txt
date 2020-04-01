@@ -1,0 +1,9 @@
+C:\Users\porto\source\repos\ScannerProject\bin\Debug\ScannerProject.exe.config
+C:\Users\porto\source\repos\ScannerProject\bin\Debug\ScannerProject.exe
+C:\Users\porto\source\repos\ScannerProject\bin\Debug\ScannerProject.pdb
+C:\Users\porto\source\repos\ScannerProject\obj\Debug\ScannerProject.csprojAssemblyReference.cache
+C:\Users\porto\source\repos\ScannerProject\obj\Debug\ScannerProject.Properties.Resources.resources
+C:\Users\porto\source\repos\ScannerProject\obj\Debug\ScannerProject.csproj.GenerateResource.cache
+C:\Users\porto\source\repos\ScannerProject\obj\Debug\ScannerProject.csproj.CoreCompileInputs.cache
+C:\Users\porto\source\repos\ScannerProject\obj\Debug\ScannerProject.exe
+C:\Users\porto\source\repos\ScannerProject\obj\Debug\ScannerProject.pdb
