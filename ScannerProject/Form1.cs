@@ -114,10 +114,11 @@ namespace ScannerProject
                         {
                             state = states.ASSIGN;
                         }
-                        else if (c[i] == '^')
+                        else if (c[i] == '/')
                         {
                             i++;
-                            state = states.COMMENT;
+                            if (c[i] == '*')
+                                state = states.COMMENT;
                         }
                         else if (c[i] == '"')
                         {
@@ -168,15 +169,27 @@ namespace ScannerProject
                         else state = states.DONE;
                         break;
 
-                    case states.COMMENT:
+                     case states.COMMENT:
                         if (state == states.COMMENT)
                         {
-                            while (c[i] != '^')
+                            while (c[i] != '*')
                             {
                                 token += c[i];
                                 i++;
                             }
-                            OutputTxt.Text += token + " , comment \n";
+                            token += c[i];
+                            i++;
+                            if (c[i] == '/')
+                            {
+                                token += c[i];
+                                OutputTxt.Text += token + " , comment \n";
+                            }
+                            else
+                            {
+                                state = states.COMMENT;
+                                break;
+                            }
+                            
                             token = "";
                             i++;
                             if (i == c.Length) state = states.DONE;
