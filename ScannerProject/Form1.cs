@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -116,6 +116,7 @@ namespace ScannerProject
                         }
                         else if (c[i] == '/')
                         {
+                            token += c[i];
                             i++;
                             if (c[i] == '*')
                                 state = states.COMMENT;
@@ -130,10 +131,11 @@ namespace ScannerProject
                             switch (c[i])
                             {
                                 case ';':
-                                    OutputTxt.Text += c[i] + "\n";
+                                    OutputTxt.Text += c[i] + " , semi colon\n";
+                                    token = "";
                                     break;
                                 default:
-                                    OutputTxt.Text += c[i] + " , symbol \n";
+                                    OutputTxt.Text += c[i] + " , symbol\n";
                                     break;
                             }
                             i++;
@@ -169,7 +171,7 @@ namespace ScannerProject
                         else state = states.DONE;
                         break;
 
-                     case states.COMMENT:
+                    case states.COMMENT:
                         if (state == states.COMMENT)
                         {
                             while (c[i] != '*')
@@ -232,6 +234,7 @@ namespace ScannerProject
                                     token += c[i];
                                     i++;
                                 }
+                                token += c[i];
                                 i++;
                                 OutputTxt.Text += token + " , function call \n";
                             }
