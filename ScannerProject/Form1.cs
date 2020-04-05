@@ -26,8 +26,10 @@ namespace ScannerProject
         states state = states.START;
 
         //RESERVED WORDS
-        string[] ResWords = { "int", "float", "string", "read", "write", "repeat", "until", "if", "elseif", "else", "then", "return", "endl" };
+        string[] ResWords = { "int", "float", "string", "read", "write", "repeat", "until", "if", "elseif", "else", "then", "return", "endl", "end" };
 
+        /* the following is a set of boolean methods that help in identifying
+           which state the program should be in */
 
         bool isDigit(char d)
         {
@@ -53,7 +55,7 @@ namespace ScannerProject
             else return false;
         }
 
-        bool isCondition(char c)
+        bool isCondition(char c) 
         {
             if (c == '=' || c == '<' || c == '>') return true;
             else return false;
@@ -73,11 +75,13 @@ namespace ScannerProject
             return false;
         }*/
 
+            /* DO NOT DELETE THIS EMPTY METHOD OR THE PROGRAM WILL CRASH */
         private void RichTextBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
 
+        /* code for the scan button */
         private void Button1_Click(object sender, EventArgs e)
         {
             code = InputTxt.Text;
@@ -102,6 +106,13 @@ namespace ScannerProject
                                 state = states.DONE;
                             else state = states.START;
                         }
+                        /*else if(c[i]=='-')
+                        {
+                            token += c[i];
+                            i++;
+                            OutputTxt.Text += token + " , error \n";
+                            state = states.DONE;
+                        }*/
                         else if (isDigit(c[i]))
                         {
                             state = states.NUMBER;
@@ -114,13 +125,7 @@ namespace ScannerProject
                         {
                             state = states.ASSIGN;
                         }
-                        else if (c[i] == '/')
-                        {
-                            token += c[i];
-                            i++;
-                            if (c[i] == '*')
-                                state = states.COMMENT;
-                        }
+                        
                         else if (c[i] == '"')
                         {
                             i++;
@@ -131,11 +136,26 @@ namespace ScannerProject
                             switch (c[i])
                             {
                                 case ';':
-                                    OutputTxt.Text += c[i] + " , semi colon\n";
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , semi colon\n";
                                     token = "";
                                     break;
-                                default:
-                                    OutputTxt.Text += c[i] + " , symbol\n";
+
+                                case '(':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , left parenthesis\n";
+                                    break;
+
+                                case ')':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , right parenthesis\n";
+                                    break;
+
+                                case ',':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , comma \n";
+                                    break;
+                                case '{':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , left braces\n";
+                                    break;
+                                case '}':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , left braces\n";
                                     break;
                             }
                             i++;
@@ -145,35 +165,92 @@ namespace ScannerProject
                         }
                         else if(isArithmatic(c[i]))
                         {
-                            OutputTxt.Text += c[i] + " , arithmatic operator \n";
+                            switch (c[i])
+                            {
+                                case '+':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , add operator\n";
+                                    break;
+
+                                case '-':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , subtract operator\n";
+                                    break;
+
+                                case '/':
+                                    if (c[i + 1] == '*')
+                                    {
+                                        token += c[i];                                        
+                                        state = states.COMMENT;
+                                    }
+                                    else
+                                    {
+                                        OutputTxt.Text += "lexeme: " + c[i] + " , divide operator\n";
+                                    }
+                                    break;
+
+                                case '*':
+                                    OutputTxt.Text += "lexeme: " + c[i] + " , multiply operator\n";
+                                    break;
+                            }
                             i++;
                         }
+                       /* else if (c[i] == '/')
+                        {
+                            token += c[i];
+                            i++;
+                            if (c[i + 1] == '*')
+                                state = states.COMMENT;
+                        } */
                         else if(isCondition(c[i]))
                         {
-                            OutputTxt.Text += c[i] + " , condition operator \n";
+                            switch(c[i])
+                            {
+                                case '<':
+                                    {
+                                        if (c[i] == '<' && c[i + 1] == '>')
+                                        {
+                                            OutputTxt.Text += "lexeme: <>" + " , token: NOT equal \n";
+                                            i += 2;
+                                        }
+                                        else
+                                        {
+                                            OutputTxt.Text += "lexeme: " + c[i] + " , token: Less than\n";
+                                        }
+                                        break;
+                                    }
+                                case '>':
+                                    {
+                                        OutputTxt.Text += "lexeme: " + c[i] + " , token: More than\n";
+                                        break;
+                                    }
+                                case '=':
+                                    {
+                                        OutputTxt.Text += "lexeme: " + c[i] + " , token: is equal\n";
+                                        break;
+                                    }
+                            }
                             i++;
                         }
                         else if(c[i] == '&' && c[i+1] == '&')
                         {
-                            OutputTxt.Text += "&& , boolean operator \n";
+                            OutputTxt.Text += "lexeme: && , token:  AND operator \n";
                             i += 2;
                         }
-                        else if(c[i]=='|' && c[i+1] =='|')
+                        else if(c[i]=='|' && c[i+1] =='|') 
                         {
-                            OutputTxt.Text += "|| , boolean operator \n";
+                            OutputTxt.Text += "lexeme: || , token:  OR operator \n";
                             i += 2;
                         }
-                        else if(c[i] == '<' && c[i+1] == '>')
+                       /* else if(c[i] == '<' && c[i+1] == '>') 
                         {
-                            OutputTxt.Text += c[i] + c[i + 1] + " , condition operator \n";
+                            OutputTxt.Text += c[i] + c[i + 1] + " , NOT equal \n";
                             i += 2;
-                        }
+                        }*/
                         else state = states.DONE;
                         break;
 
                     case states.COMMENT:
-                        if (state == states.COMMENT)
-                        {
+                        if (state == states.COMMENT) 
+                        {                            
                             while (c[i] != '*')
                             {
                                 token += c[i];
@@ -184,7 +261,7 @@ namespace ScannerProject
                             if (c[i] == '/')
                             {
                                 token += c[i];
-                                OutputTxt.Text += token + " , comment \n";
+                                OutputTxt.Text += "lexeme: " + token + " , token: comment \n";
                             }
                             else
                             {
@@ -205,7 +282,7 @@ namespace ScannerProject
                             token += c[i];
                             i++;
                         }
-                        OutputTxt.Text += token += " , number \n";
+                        OutputTxt.Text += "lexeme: " + token + " , token: number \n";
                         token = "";
                         if (i == c.Length) state = states.DONE;
                         else state = states.START;
@@ -224,9 +301,85 @@ namespace ScannerProject
                         {
                             if (ResWords[j] == token) ResFlag = true;
                         }
-                        if (ResFlag) OutputTxt.Text += token + " , reserved word \n";
-                        else
+                        if (ResFlag)
                         {
+                            switch(token)
+                            {
+                                case "int":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: int \n";
+                                        break;
+                                    }
+
+                                case "float":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: float \n";
+                                        break;
+                                    }
+                                case "string":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: string \n";
+                                        break;
+                                    }
+                                case "read":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: read \n";
+                                        break;
+                                    }
+                                case "write":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: write \n";
+                                        break;
+                                    }
+                                case "repeat":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: repeat \n";
+                                        break;
+                                    }
+                                case "until":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: until \n";
+                                        break;
+                                    }
+                                case "if":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: if \n";
+                                        break;
+                                    }
+                                case "elseif":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: elseif \n";
+                                        break;
+                                    }
+                                case "else":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: else \n";
+                                        break;
+                                    }
+                                case "then":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: then \n";
+                                        break;
+                                    }
+                                case "return":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: return \n";
+                                        break;
+                                    }
+                                case "endl":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: endl \n";
+                                        break;
+                                    }
+                                case "end":
+                                    {
+                                        OutputTxt.Text += "lexeme: " + token + " , token: end \n";
+                                        break;
+                                    }
+                            }
+                        }
+                        else
+                        {   
                             if (c[i] == '(')
                             {
                                 while (c[i] != ')')
@@ -236,9 +389,9 @@ namespace ScannerProject
                                 }
                                 token += c[i];
                                 i++;
-                                OutputTxt.Text += token + " , function call \n";
+                                OutputTxt.Text +="lexeme: " + token + " , token: function call \n";
                             }
-                            else OutputTxt.Text += token + " , Identifier \n";
+                            else OutputTxt.Text += "lexeme: " + token + " , token: Identifier \n";
                         }
                         token = "";
                         ResFlag = false;
@@ -258,12 +411,12 @@ namespace ScannerProject
                          if (i == c.Length) state = states.DONE;
                          else state = states.START;
                          break; */
-
+                                                                
                     case states.ASSIGN:
-                        if (c[i] == ':')
+                        if (c[i] == ':') 
                         {
                             i += 2;
-                            OutputTxt.Text += " := , assign operator \n";
+                            OutputTxt.Text += "lexeme: := , token: assign operator \n";
                             state = states.START;
                         }
                         else
@@ -281,7 +434,7 @@ namespace ScannerProject
                                 token += c[i];
                                 i++;
                             }
-                            OutputTxt.Text += token + " , string \n";
+                            OutputTxt.Text += "lexeme: " + token + " , token: string \n";
                             token = "";
                             i++;
                             if (i == c.Length) state = states.DONE;
@@ -297,12 +450,13 @@ namespace ScannerProject
         }
 
 
-
+        /* DO NOT DELETE THIS EMPTY METHOD OR THE PROGRAM WILL CRASH */
         private void RichTextBox2_TextChanged(object sender, EventArgs e)
         {
 
         }
 
+        /* code for the clear button */
         private void Button2_Click(object sender, EventArgs e)
         {
             OutputTxt.Text = "";
